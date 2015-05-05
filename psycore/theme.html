@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<{$xoops_langcode}>" lang="<{$xoops_langcode}>">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<{$xoops_charset}>" />
+<meta http-equiv="content-language" content="<{$xoops_langcode}>" />
+<meta name="robots" content="<{$xoops_meta_robots}>" />
+<meta name="keywords" content="<{$xoops_meta_keywords}>" />
+<meta name="description" content="<{$xoops_meta_description}>" />
+<meta name="rating" content="<{$xoops_meta_rating}>" />
+<meta name="revisit-after" content="3 weeks">
+<meta name="author" content="<{$xoops_meta_author}>" />
+<meta name="copyright" content="<{$xoops_meta_copyright}>" />
+<meta name="generator" content="XOOPS" />
+<title><{$xoops_sitename}>::<{$xoops_pagetitle}></title>
+<link href="<{$xoops_url}>/favicon.ico" rel="SHORTCUT ICON" />
+<link rel="stylesheet" type="text/css" media="all" href="<{$xoops_url}>/xoops.css" />
+<link rel="stylesheet" type="text/css" media="all" href="<{$xoops_themecss}>" />
+    <script language="JavaScript">
+      // Ziel-Datum in MEZ
+      var jahr=2005, monat=2, tag=10, stunde=24, minute=00, sekunde=00;
+      var zielDatum=new Date(jahr,monat-1,tag,stunde,minute,sekunde);
+
+      function countdown() {
+        startDatum=new Date(); // Aktuelles Datum
+
+        // Countdown berechnen und anzeigen, bis Ziel-Datum erreicht ist
+        if(startDatum<=zielDatum)  {
+
+          var jahre=0, monate=0, tage=0, stunden=0, minuten=0, sekunden=0;
+
+          /* Allgemeines Vorgehen:
+           * Zunächst werden die vollen Jahre gezählt
+           * und anschließend der Start- und Ziel-Monat auf den jeweiligen 1. gesetzt.
+           * Nun werden erst die vollen Monate vom 1. zum 1. des Start- bzw. Ziel-Monats
+           * berechnet und danach die tatsächlichen Monatstage wieder mit einbezogen.
+           * Dieses Vorgehen vermeidet Probleme mit den verschiedenen Monatslängen.
+           * Was übrig bleibt, wird in Tagen, Stunden, Minuten und Sekunden ausgedrückt.*/
+
+          // Jahre
+          if(startDatum<zielDatum) {
+            while(startDatum<zielDatum) {
+              if(startDatum.setFullYear(startDatum.getFullYear()+1)<=zielDatum) jahre++;
+            }
+            startDatum.setFullYear(startDatum.getFullYear()-1);
+          }
+
+          // Restliche Tage zum Monatsende ermitteln
+          var restTage=0;
+          var m=startDatum.getMonth();
+          if(m==1-1|| m==3-1||m==5-1||m==7-1||m==8-1||m==10-1||m==12-1)
+              restTage=31-startDatum.getDate();
+          else if(m==4-1|| m==6-1||m==9-1||m==11-1) restTage=30-startDatum.getDate();
+          else if(m==2-1) {
+            if(startDatum.getFullYear()%4==0 && (startDatum.getFullYear()%100!=0
+                || startDatum.getFullYear()%400==0))
+                    restTage=29-startDatum.getDate(); // Schaltjahr
+            else restTage=28-startDatum.getDate();
+          }
+
+          // Start- und Ziel-Tag merken und auf 1 setzen
+          var startTag=startDatum.getDate();
+          var zielTag=zielDatum.getDate();
+          startDatum.setDate(1);
+          zielDatum.setDate(1);
+
+          // Monate
+          if(startDatum<zielDatum) {
+            while(startDatum<zielDatum) {
+              if(startDatum.setMonth(startDatum.getMonth()+1)<=zielDatum) monate++;
+            }
+            startDatum.setMonth(startDatum.getMonth()-1);
+          }
+
+          // Tatsächlichen Start- und Ziel-Tag berücksichtigen
+          if(startDatum.getMonth()==zielDatum.getMonth()) {
+            if(startTag<=zielTag) startDatum.setDate(startTag);
+            else {
+              monate--;
+              tage=restTage+1;
+            }
+          }
+          else {
+            startDatum.setMonth(startDatum.getMonth()+1);
+            if(startTag>=zielTag) tage=restTage+1;
+            else {
+              monate++;
+              startDatum.setDate(startTag);
+            }
+          }
+          zielDatum.setDate(zielTag);
+
+          // Tage
+          restTage=Math.floor((zielDatum-startDatum)/(24*60*60*1000));
+          startDatum.setTime(startDatum.getTime()+restTage*24*60*60*1000);
+          tage+=restTage;
+
+          // Stunden
+          stunden=Math.floor((zielDatum-startDatum)/(60*60*1000));
+          startDatum.setTime(startDatum.getTime()+stunden*60*60*1000);
+
+          // Minuten
+          minuten=Math.floor((zielDatum-startDatum)/(60*1000));
+          startDatum.setTime(startDatum.getTime()+minuten*60*1000);
+
+          // Sekunden
+          sekunden=Math.floor((zielDatum-startDatum)/1000);
+
+          // Anzeige formatieren
+
+          (tage!=1)?tage=tage+" Tage,  ":tage=tage+" Tag,  ";
+          (stunden!=1)?stunden=stunden+" Stunden,  ":stunden=stunden+" Stunde,  ";
+          (minuten!=1)?minuten=minuten+" Minuten  und  ":minuten=minuten+" Minute  und  ";
+          if(sekunden<10) sekunden="0"+sekunden;
+          (sekunden!=1)?sekunden=sekunden+" Sekunden":sekunden=sekunden+" Sekunde";
+
+          document.countdownform.countdowninput.value=
+              jahre+monate+tage+stunden+minuten+sekunden;
+
+          setTimeout('countdown()',200);
+        }
+        // Anderenfalls alles auf Null setzen
+        else document.countdownform.countdowninput.value=
+            "0 Jahre,  0 Monate,  0 Tage,  0 Stunden,  0 Minuten  und  00 Sekunden";
+      }
+    </script>
+<style type="text/css">
+<!--
+.Stil1 {
+	font-size: 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+}
+.Stil2 {
+	font-size: 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.Stil4 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif; }
+.Stil6 {
+	font-size: 11px;
+	color: #996600;
+}
+.Stil8 {
+	font-size: 11px;
+	font-weight: bold;
+}
+.Stil10 {font-size: 11px}
+.Stil14 {color: #996600}
+.Stil15 {
+	color: #FFB019;
+	font-size: 11px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+<{$xoops_module_header}>
+<script type="text/javascript">
+<!--
+<{$xoops_js}>
+//-->
+</script>
+</head>
+<body>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<script type="text/javascript" src="/fader.js"></script><tr>
+<td valign="top">
+<table class="topbkg" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr>
+  <td bgcolor="#000000">      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="1000" height="33">
+    <param name="movie" value="/join.swf" />
+    <param name="quality" value="high" /><param name="BGCOLOR" value="#000000" />
+    <embed src="/join.swf" width="1000" height="33" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" bgcolor="#000000"></embed>
+  </object>
+    <div id="Layer1" style="position:absolute; width:58px; height:50px; z-index:1; left: 166px; top: 182px; color: #999900;"><img src="/3h.gif" width="70" height="55" /></div>
+      <div align="right">  <body onload="countdown()">
+      </div>
+    <div id="Layer2" style="position:absolute; width:69px; height:50px; z-index:2; left: 767px; top: 182px;"><img src="/4h.gif" width="70" height="55" /></div>    </td></tr>
+<tr>
+  <td bgcolor="#000000"><img src="/lo1.jpg" width="100%" /></td>
+</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+<tr>
+<td width="173" align="center" class="topnav"><div align="left"><img src="/1h.jpg" width="173" height="22" /></div></td>
+<td align="center" class="topnav Stil14">&nbsp;<a href="<{$xoops_url}>/"><{$xoops_sitename}></a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/news/">News</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/newbb/">Forum</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/xoopspoll/">Voting</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/xoopsmembers/">Members</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/mydownloads/">Downloads</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/mylinks/">Links</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/xoopsfaq/">FAQ</a>&nbsp; &#8226;&nbsp; <a href="<{$xoops_url}>/modules/contact/">Contact</a>&nbsp; <table width="100%" height="7"  border="0" cellpadding="0" cellspacing="0" background="/topborderx.jpg">
+  <tr>
+    <td height="7">&nbsp;</td>
+  </tr>
+</table></td>
+<td width="176" align="center" class="topnav"><img src="/2h.jpg" width="176" height="22" /></td>
+</tr>
+</table>
+
+<table cellspacing="0">
+    <tr>
+      <td valign="top" background="/nav_bg_right.gif" id="leftcolumn">
+
+<!-- Start left blocks loop -->
+
+<{foreach item=block from=$xoops_lblocks}>
+<table width="100%" height="26"  border="0" cellpadding="0" cellspacing="0" background="/cellpic3.gif">
+  <tr>
+    <td><img src="/point_01.gif" width="12" height="13" align="middle" border="0" alt="" hspace="3" /><span class="Stil2"></span></td>
+    <td><div align="center"><span class="Stil2"><span class="Stil4"><{$block.title}></span></span></div></td>
+    <td><div align="right"><img src="/point_02.gif" width="12" height="13" align="middle" border="0" alt="" hspace="3" /></div></td>
+  </tr>
+</table>
+<div class="blockContent"><{$block.content}></div>
+<{/foreach}>
+
+<!-- End left blocks loop -->      </td>
+
+      <td width="14" valign="top" background="/left1.jpg" id="centercolumn">
+
+<!-- Display center blocks if any -->
+</td>
+      <td valign="top" background="/lightx.jpg" id="centercolumn"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="20%"><img src="/topleft.jpg" width="100" height="52" /></td>
+          <td width="77%"><div align="center"><span class="Stil5 Stil2 Stil6"><span class="Stil5 Stil2  Stil8"><span class="Stil5 Stil2  Stil10"><img src="/willkommen.jpg" /></span></span></span><br />
+            </div></td>
+          <td width="3%"><img src="/topright.jpg" width="100" height="52" /></td>
+        </tr>
+      </table>                
+        <{if $xoops_showcblock == 1}>
+<table cellspacing="0">
+          <tr>
+            <td id="centerCcolumn" colspan="2">
+              <!-- Start center-center blocks loop -->
+<{foreach item=block from=$xoops_ccblocks}>
+      <div style="padding: 5px;">
+        <fieldset>
+        <legend class="blockTitle"><{$block.title}></legend>
+        <div class="blockContent"><{$block.content}></div>
+        </fieldset>
+      </div>
+<{/foreach}>
+      <!-- End center-center blocks loop -->
+            </td>
+          </tr>
+          <tr>
+            <td id="centerLcolumn">
+              <!-- Start center-left blocks loop -->
+<{foreach item=block from=$xoops_clblocks}>
+      <div style="padding: 0px 0px 0px 8px;">
+        <fieldset>
+        <legend class="blockTitle"><{$block.title}></legend>
+        <div class="blockContent"><{$block.content}></div>
+        </fieldset>
+      </div>
+<{/foreach}>
+      <!-- End center-left blocks loop -->
+            </td>
+            <td id="centerRcolumn">
+              <!-- Start center-right blocks loop -->
+<{foreach item=block from=$xoops_crblocks}>
+      <div style="padding: 0px 5px 0px 0px;">
+        <fieldset>
+        <legend class="blockTitle"><{$block.title}></legend>
+        <div class="blockContent"><{$block.content}></div>
+        </fieldset>
+      </div>
+<{/foreach}>
+      <!-- End center-right blocks loop -->
+            </td>
+          </tr>
+        </table>
+        <{/if}>
+        <!-- End display center blocks -->
+        <div id="content"> <{$xoops_contents}> </div>
+        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><img src="/downleft.jpg" width="100" height="52" /></td>
+            <td width="68%">&nbsp;</td>
+            <td><div align="right"><img src="/downright.jpg" width="100" height="52" /></div></td>
+          </tr>
+        </table></td>
+      <td width="12" valign="top" background="/left2.jpg" id="centercolumn">&nbsp;</td>
+      <{if $xoops_showrblock == 1}>
+
+     <td height="22" valign="top" background="/nav_bg_left.gif" id="rightcolumn">
+
+<!-- Start right blocks loop -->
+
+<{foreach item=block from=$xoops_rblocks}>
+<table width="100%" height="26"  border="0" cellpadding="0" cellspacing="0" background="/cellpic3.gif">
+  <tr>
+    <td><img src="/point_01.gif" width="12" height="13" align="middle" border="0" alt="" hspace="3" /><span class="Stil2"></span></td>
+    <td><div align="center"><span class="Stil2"><span class="Stil4"><{$block.title}></span></span></div></td>
+    <td><div align="right"><img src="/point_02.gif" width="12" height="13" align="middle" border="0" alt="" hspace="3" /></div></td>
+  </tr>
+</table>
+<div class="blockContent"><{$block.content}></div>
+<{/foreach}>
+
+
+<!-- End right blocks loop -->
+<{/if}>      </td>
+    </tr>
+  </table>
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+<tr><td align="center" class="topnav">
+<div class="gensmall Stil1">&copy; COPYRIGHT PSYCORE 2005 | BASED ON XOOPS CMS | DESIGN BY SOULRAMA </div>
+</td>
+</tr></table>
+</body>
+</html>
